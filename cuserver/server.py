@@ -46,7 +46,12 @@ class ChessServer:
         while True:
             self.serve()
 
-if __name__ == '__main__':
+
+def main():
     server = ChessServer(("0.0.0.0", 8002))
     server.main()
     print(server, "shutting down...")
+
+if __name__ == '__main__':
+    main()
+    
