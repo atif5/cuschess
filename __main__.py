@@ -1,11 +1,11 @@
 import sys
 import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 from cuschess.cuserver.server import main as serv
 from cuschess.computer.__main__ import main as comp
 from cuschess.chess.__main__ import main as twoplayer
 from cuschess.cusonline.__main__ import main as online
 
-os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
 map_ = {
     "--server": serv,
