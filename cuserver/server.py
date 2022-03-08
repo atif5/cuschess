@@ -1,6 +1,7 @@
 
 import socket
 
+
 class ChessServer:
     def __init__(self, addr):
         self.addr = addr
@@ -11,7 +12,7 @@ class ChessServer:
         self.players = list()
 
     def __str__(self):
-        return f"<Chess server running at {self.addr}>"
+        return f"Chess server running at {self.addr}"
 
     def accept(self):
         player, addr = self.sock.accept()
@@ -30,21 +31,33 @@ class ChessServer:
             player.send(b"ok!")
 
     def serve(self):
-        data1 = self.players[0].recv(1)
-        data2 = self.players[0].recv(1)
-        self.players[1].send(data1)
-        self.players[1].send(data2)
-        data1 = self.players[1].recv(1)
-        data2 = self.players[1].recv(1)
-        self.players[0].send(data1)
-        self.players[0].send(data2)
-        
+        player1, player2 = self.players
+        data1 = player1.recv(1)
+        data2 = player1.recv(1)
+        enddata = int.from_bytes(player1.recv(1), "big")
+        player2.send(data1)
+        player2.send(data2)
+        if enddata:
+            return True
+        data1 = player2.recv(1)
+        data2 = player2.recv(1)
+        enddata = int.from_bytes(player2.recv(1), "big")
+        player1.send(data1)
+        player1.send(data2)
+        if enddata:
+            return True
+
+    def reset(self):
+        self.players.clear()
 
     def main(self):
-        print(self)
+        print("[*]", self, "is now listening.")
         self.accept_all()
         while True:
-            self.serve()
+            if self.serve():
+                print("[*] Game ended.")
+                self.reset()
+                self.main()
 
 
 def main():
@@ -52,6 +65,6 @@ def main():
     server.main()
     print(server, "shutting down...")
 
+
 if __name__ == '__main__':
     main()
-    

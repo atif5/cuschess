@@ -73,8 +73,10 @@ class OnlineChessGame:
                     self.sock.send(
                         (end_pos[0]*10+end_pos[1]).to_bytes(1, "big"))
                     if ending := self.handle_ending():
+                        self.sock.send((1).to_bytes(1, "big"))
                         return ending
                     else:
+                        self.sock.send((0).to_bytes(1, "big"))
                         return False
             else:
                 self.graphicalboard.graphical_select(self.local)
@@ -97,7 +99,6 @@ class OnlineChessGame:
         self.graphicalboard.animate_movement(rpiece, end_pos)
         self.remote.make_move(rpiece, end_pos)
         self.checkers = self.local.king.is_incheck()
-        
 
         if ending := self.handle_ending():
             return ending
