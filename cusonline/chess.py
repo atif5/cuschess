@@ -8,11 +8,10 @@ SERVICE_ADDR = ("0.0.0.0", 8002)
 
 
 class OnlineChessGame:
-    def __init__(self):
+    def __init__(self, screen):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.board = Board()
         self.players = [Black(self.board), White(self.board)]
-        self.graphicalboard = BoardGraphical(self.board, self.players)
         self.black, self.white = self.players
         self.turn = self.white
         self.checkers = list()
@@ -25,6 +24,9 @@ class OnlineChessGame:
             self.local = self.black
             self.remote = self.white
             self.turn = self.remote
+
+        self.graphicalboard = BoardGraphical(
+            self.board, self.players, screen, self.local.real)
 
     def connect(self):
         global SERVICE_ADDR

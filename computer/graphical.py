@@ -4,6 +4,7 @@ from cuschess.logic import *
 import pygame
 import os
 
+
 LIGHTPINK = "#FFC0CB"
 PINK = "#FF69B4"
 RED = "#FF0000"
@@ -36,12 +37,12 @@ class BoardGraphical:
     pink.fill(PINK)
     white.fill(WHITE)
 
-    def __init__(self, board, players, selected=None):
+    def __init__(self, board, players, screen, selected=None):
         self.board = board
         self.players = players
-        self.size = (360, 360)
+        self.screen = screen
+        self.size = self.screen.get_size()
         self.square_size = (45, 45)
-        self.screen = pygame.display.set_mode(self.size)
         self.squares = [1, 0, 1, 0, 1, 0, 1, 0,
                         0, 1, 0, 1, 0, 1, 0, 1,
                         1, 0, 1, 0, 1, 0, 1, 0,

@@ -3,10 +3,10 @@ from .graphical import *
 
 
 class ChessGame:
-    def __init__(self):
+    def __init__(self, screen):
         self.board = Board()
         self.players = [Black(self.board), White(self.board)]
-        self.graphicalboard = BoardGraphical(self.board, self.players)
+        self.graphicalboard = BoardGraphical(self.board, self.players, screen)
         self.black, self.white = self.players
         self.turn = self.white
         self.checkers = list()
