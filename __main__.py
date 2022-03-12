@@ -24,6 +24,8 @@ def main():
             option.exist(screen)
         pygame.display.flip()
         clock.tick(60)
+        screen.fill((255, 255, 255))
+        screen.fill((0, 0, 0))
 
 
 if __name__ == '__main__':

@@ -21,7 +21,8 @@ class ModeOption:
         self.highlighted = False
 
     def highlight(self, color):
-        self.surface = FONT.render(self.text, True, color)
+        hfont = pygame.font.SysFont(FONT_NAME, FONT_SIZE+2)
+        self.surface = hfont.render(self.text, True, color)
         self.highlighted = True
 
     def draw(self, screen):
@@ -49,6 +50,7 @@ class ModeOption:
 
     def on_click(self, screen):
         if self.text == "Run a server":
+            pygame.quit()
             self.mode()
         else:
             self.mode(screen)
