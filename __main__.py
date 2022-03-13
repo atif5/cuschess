@@ -1,6 +1,6 @@
 import sys
-import os
 import time
+import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 from .menu import ModeOption

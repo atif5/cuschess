@@ -1,9 +1,19 @@
 
 from .graphical import *
 from stockfish import Stockfish
+from platform import system
+
+platform_ = system()
+
+if platform_ == "Linux":
+    ENGINE_PATH = "cuschess/computer/stockfish/stockfish_14.1_linux_x64"
+elif platform_ == "Windows":
+    ENGINE_PATH = "cuschess/computer/stockfish/stockfish_14.1_win_x64.exe"
+
 
 class ChessGame:
     def __init__(self, screen):
+        global ENGINE_PATH
         self.board = Board()
         self.players = [Black(self.board), White(self.board)]
         self.graphicalboard = BoardGraphical(self.board, self.players, screen)
@@ -12,7 +22,7 @@ class ChessGame:
         self.computer = self.black
         self.turn = self.player
         self.checkers = list()
-        self.engine = Stockfish(path="cuschess/computer/stockfish/stockfish_14.1_linux_x64")
+        self.engine = Stockfish(path=ENGINE_PATH)
 
     def handle_graphics(self):
         self.graphicalboard.draw_all(self.checkers)
@@ -68,7 +78,6 @@ class ChessGame:
         self.turn = self.player
         if ending := self.handle_ending():
             return ending
-
 
     def manage_turns(self):
         if self.turn is self.computer:
