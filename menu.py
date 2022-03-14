@@ -7,21 +7,25 @@ FONT_NAME = "dejavuserif"
 FONT_SIZE = 30
 FONT = pygame.font.SysFont(FONT_NAME, FONT_SIZE)
 
+WHITE = "#FFFFFF"
+BLACK = "#000000"
 
-class ModeOption:
-    def __init__(self, pos, text, size, color, mode):
-        global FONT
+
+class Option:
+    def __init__(self, pos, text, size, color, funcs):
+        global FONT_NAME
         self.pos = pos
         self.text = text
         self.size = size
         self.color = color
-        self.mode = mode
-        self.surface = FONT.render(self.text, True, self.color)
+        self.funcs = funcs
+        self.font = pygame.font.SysFont(FONT_NAME, self.size)
+        self.surface = self.font.render(self.text, True, self.color)
         self.ssize = self.surface.get_size()
         self.highlighted = False
 
     def highlight(self, color):
-        hfont = pygame.font.SysFont(FONT_NAME, FONT_SIZE+2)
+        hfont = pygame.font.SysFont(FONT_NAME, self.size+2)
         self.surface = hfont.render(self.text, True, color)
         self.highlighted = True
 
@@ -42,18 +46,16 @@ class ModeOption:
             return self.is_focused()
 
     def reset(self):
-        self.surface = FONT.render(self.text, True, self.color)
+        self.surface = self.font.render(self.text, True, self.color)
         self.highlighted = False
 
     def on_focus(self, color):
         self.highlight(color)
 
-    def on_click(self, screen):
-        if self.text == "Run a server":
-            pygame.quit()
-            self.mode()
-        else:
-            self.mode(screen)
+    def on_click(self):
+        for func in self.funcs:
+            args = self.funcs[func]
+            func(*args)
 
     def on_unfocus(self):
         self.reset()
@@ -61,14 +63,44 @@ class ModeOption:
     def exist(self, screen, focus_color=(255, 255, 255)):
         self.draw(screen)
         if self.is_clicked():
-            self.on_click(screen)
+            self.on_click()
         if self.is_focused():
             self.on_focus(focus_color)
         else:
-            if self.highlighted:  
+            if self.highlighted:
                 self.on_unfocus()
 
 
+class InformingText:
+    def __init__(self, pos, text, size, color):
+        global FONT_NAME
+        self.pos = pos
+        self.text = text
+        self.size = size
+        self.font = pygame.font.SysFont(FONT_NAME, self.size)
+        self.color = color
+        self.surface = self.font.render(self.text, True, self.color)
+        self.ssize = self.surface.get_size()
+
+    def exist(self, screen):
+        screen.blit(self.surface, self.pos)
 
 
+class Menu:
+    def __init__(self, color, widgets, screen, clean=True):
+        self.color = color
+        self.widgets = widgets
+        self.screen = screen
+        self.clean = clean
 
+    def draw(self):
+        clock = pygame.time.Clock()
+        while True:
+            pygame.event.pump()
+            for widget in self.widgets:
+                widget.exist(self.screen)
+            pygame.display.flip()
+            clock.tick(60)
+            if self.clean:
+                self.screen.fill(WHITE)
+                self.screen.fill(self.color)
