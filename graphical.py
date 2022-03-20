@@ -1,9 +1,8 @@
 
-import time
+
 from cuschess.logic import *
 import pygame
-import os
-
+import time
 
 LIGHTPINK = "#FFC0CB"
 PINK = "#FF69B4"
@@ -37,7 +36,7 @@ class BoardGraphical:
     pink.fill(PINK)
     white.fill(WHITE)
 
-    def __init__(self, board, players, screen, selected=None):
+    def __init__(self, board, players, screen, reverse, selected=None):
         self.board = board
         self.players = players
         self.screen = screen
@@ -53,7 +52,9 @@ class BoardGraphical:
                         0, 1, 0, 1, 0, 1, 0, 1]
 
         self.indicative = []
+        self.reverse = reverse
         self.selected = None
+        
 
     def highlight_posssible_move(self, x, y, pos):
         if self.board.get_at(x, y):
@@ -62,28 +63,13 @@ class BoardGraphical:
             pygame.draw.circle(self.screen, RED,
                                (pos[0]+22.5, pos[1]+22.5), 7)
 
-    def draw_base(self, checkers, plain=False):
-        w, h = self.square_size
-        for i, square in enumerate(self.squares):
-            x = i % 8
-            y = i//8
-            boardpos = (x, y)
-            realpos = (x*w, y*w)
-            if self.selected and (self.selected.pos == boardpos).all() and not plain:
-                self.screen.blit(self.lightpink, realpos)
-            elif self.board.get_at(x, y) in checkers and not plain:
-                self.screen.blit(self.framey, realpos)
-            elif square:
-                self.screen.blit(self.white, realpos)
-            else:
-                self.screen.blit(self.pink, realpos)
-            if boardpos in self.indicative and not plain:
-                self.highlight_posssible_move(x, y, realpos)
-
     def walk(self, piece, path):
+        w, h = self.size
         sprite = self.sprites[piece.color*10+piece.num]
         for step in path:
             time.sleep(0.006)
+            if self.reverse:
+                step = (step[0], abs(step[1]-h)-h//8)
             self.screen.fill(BLACK)
             self.screen.fill(WHITE)
             self.draw_base([], plain=True)
@@ -118,11 +104,33 @@ class BoardGraphical:
         path.append((dpos[0]*w, dpos[1]*w))
         self.walk(piece, path)
 
+    def draw_base(self, checkers, plain=False):
+        wk, bk = (self.players[0].king, self.players[1].king)
+        checkers = wk.is_incheck()+bk.is_incheck()
+        w, h = self.square_size
+        for i, square in enumerate(self.squares):
+            x = i % 8
+            y = i//8
+            boardpos = (x, y)
+            miy = abs(y-7*self.reverse)
+            realpos = (x*w, miy*w)
+            if self.selected and (self.selected.pos == boardpos).all() and not plain:
+                self.screen.blit(self.lightpink, realpos)
+            elif self.board.get_at(x, y) in checkers and not plain:
+                self.screen.blit(self.framey, realpos)
+            elif square:
+                self.screen.blit(self.white, realpos)
+            else:
+                self.screen.blit(self.pink, realpos)
+            if boardpos in self.indicative and not plain:
+                self.highlight_posssible_move(x, y, realpos)
+
     def draw_pieces(self, skip_selected=False):
         w, h = self.square_size
         for iy in range(8):
             for ix in range(8):
                 rpiece = self.board.get_at(ix, iy)
+                iy = abs(iy-7*self.reverse)
                 pos = (ix*w, iy*w)
                 if rpiece:
                     if rpiece == self.selected and skip_selected:
@@ -152,7 +160,7 @@ class BoardGraphical:
     def graphical_select(self, player):
         w, h = self.square_size
         mx, my = pygame.mouse.get_pos()
-        boardpos = (int(mx//w), int(my//w))
+        boardpos = (int(mx//w), abs(int(my//w)-7*self.reverse))
         if rpiece := self.board.get_at(*boardpos):
             if rpiece.color == player.real:
                 self.select(rpiece, player)
@@ -162,7 +170,7 @@ class BoardGraphical:
     def graphical_move(self, player):
         w, h = self.square_size
         mx, my = pygame.mouse.get_pos()
-        boardpos = (int(mx//w), int(my//w))
+        boardpos = (int(mx//w), abs(int(my//w)-7*self.reverse))
         if boardpos not in self.indicative:
             self.deselect()
             self.graphical_select(player)

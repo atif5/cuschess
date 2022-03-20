@@ -1,5 +1,6 @@
 
 import pygame
+import time
 
 pygame.font.init()
 
@@ -23,6 +24,7 @@ class Option:
         self.surface = self.font.render(self.text, True, self.color)
         self.ssize = self.surface.get_size()
         self.highlighted = False
+        self.ender = None
 
     def highlight(self, color):
         hfont = pygame.font.SysFont(FONT_NAME, self.size+2)
@@ -43,6 +45,7 @@ class Option:
 
     def is_clicked(self):
         if pygame.mouse.get_pressed()[0]:
+            print(f"clicked on {self.text}")
             return self.is_focused()
 
     def reset(self):
@@ -64,6 +67,8 @@ class Option:
         self.draw(screen)
         if self.is_clicked():
             self.on_click()
+            if self.ender:
+                return True
         if self.is_focused():
             self.on_focus(focus_color)
         else:
@@ -72,7 +77,7 @@ class Option:
 
 
 class InformingText:
-    def __init__(self, pos, text, size, color):
+    def __init__(self, pos, text, size, color, midst=False, screen=None):
         global FONT_NAME
         self.pos = pos
         self.text = text
@@ -81,9 +86,15 @@ class InformingText:
         self.color = color
         self.surface = self.font.render(self.text, True, self.color)
         self.ssize = self.surface.get_size()
+        if midst:
+            self.midst(screen)
 
     def exist(self, screen):
         screen.blit(self.surface, self.pos)
+
+    def midst(self, screen):
+        x = screen.get_size()[0]
+        self.pos = ((x-self.ssize[0])//2, self.pos[1])
 
 
 class Menu:
@@ -93,12 +104,21 @@ class Menu:
         self.screen = screen
         self.clean = clean
 
+    def init_enders(self, texts):
+        for widget in self.widgets:
+            if widget.text in texts:
+                widget.ender = True
+
     def draw(self):
         clock = pygame.time.Clock()
         while True:
             pygame.event.pump()
             for widget in self.widgets:
-                widget.exist(self.screen)
+                if widget.exist(self.screen):
+                    pygame.event.pump()
+                    print("menu ended.")
+                    return
+                pygame.event.pump()
             pygame.display.flip()
             clock.tick(60)
             if self.clean:

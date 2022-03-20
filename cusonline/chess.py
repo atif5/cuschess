@@ -1,5 +1,5 @@
 
-from .graphical import *
+from cuschess import *
 import time
 import socket
 import select

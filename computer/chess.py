@@ -1,5 +1,5 @@
 
-from .graphical import *
+from cuschess import *
 from stockfish import Stockfish
 from platform import system
 
@@ -16,7 +16,8 @@ class ChessGame:
         global ENGINE_PATH
         self.board = Board()
         self.players = [Black(self.board), White(self.board)]
-        self.graphicalboard = BoardGraphical(self.board, self.players, screen)
+        self.graphicalboard = BoardGraphical(
+            self.board, self.players, screen, reverse=False)
         self.black, self.white = self.players
         self.player = self.white
         self.computer = self.black
