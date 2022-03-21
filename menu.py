@@ -27,9 +27,10 @@ class Option:
         self.ender = None
 
     def highlight(self, color):
-        hfont = pygame.font.SysFont(FONT_NAME, self.size+2)
-        self.surface = hfont.render(self.text, True, color)
-        self.highlighted = True
+        if not self.highlighted:
+            hfont = pygame.font.SysFont(FONT_NAME, self.size+2)
+            self.surface = hfont.render(self.text, True, color)
+            self.highlighted = True
 
     def draw(self, screen):
         screen.blit(self.surface, self.pos)
