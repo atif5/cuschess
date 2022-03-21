@@ -46,7 +46,6 @@ class Option:
 
     def is_clicked(self):
         if pygame.mouse.get_pressed()[0]:
-            print(f"clicked on {self.text}")
             return self.is_focused()
 
     def reset(self):
@@ -117,7 +116,6 @@ class Menu:
             for widget in self.widgets:
                 if widget.exist(self.screen):
                     pygame.event.pump()
-                    print("menu ended.")
                     return
                 pygame.event.pump()
             pygame.display.flip()
