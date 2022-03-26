@@ -2,8 +2,10 @@
 from .chess import *
 import cuschess
 
+
 def wait():
-    time.sleep(0.5)
+    time.sleep(0.000000000001)
+
 
 def main(screen):
     game = ChessGame(screen)
@@ -17,19 +19,18 @@ def main(screen):
         maint = f"CusSsss, {winner}"
 
     widgets = [
-        InformingText((0, 40), maint, 20, LIGHTPINK, midst=True, screen=screen),
-        InformingText((0, 120), "Play again?", 30, LIGHTPINK, midst=True, screen=screen),
+        InformingText((0, 40), maint, 20, LIGHTPINK, midst=True, leng=360),
+        InformingText((0, 120), "Play again?", 30,
+                      LIGHTPINK, midst=True, leng=360),
         Option((86, 200), "Yes", 30, LIGHTPINK,
                {main: [screen]}),
         Option((222, 200), "No", 30, LIGHTPINK,
                {wait: []}),
-        
-        ]
-    try_again = Menu(BLACK, widgets, screen)
+
+    ]
+    try_again = Menu(VIOLET, widgets)
     try_again.init_enders(["No", "Yes"])
-    print(widgets[2].ssize)
-    print(widgets[3].ssize)
-    try_again.draw()
+    try_again.draw(screen)
 
 
 if __name__ == '__main__':

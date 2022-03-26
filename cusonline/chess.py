@@ -4,8 +4,7 @@ import time
 import socket
 import select
 
-SERVICE_ADDR = ("0.0.0.0", 8002)
-
+SERVICE_ADDR = ("fxxf.me", 8002)
 
 class OnlineChessGame:
     def __init__(self, screen):
@@ -67,8 +66,9 @@ class OnlineChessGame:
         self.reset_skipped(self.local.real)
         if pygame.mouse.get_pressed()[0]:
             if self.graphicalboard.selected:
-                start_pos = self.graphicalboard.selected.pos.tolist()
-                if end_pos := self.graphicalboard.graphical_move(self.local):
+                if pos := self.graphicalboard.graphical_move(self.local):
+                    start_pos, end_pos = self.board.nottoreal(
+                        pos[0:2]), self.board.nottoreal(pos[2:4])
                     self.checkers = self.remote.king.is_incheck()
                     self.sock.send(
                         (start_pos[0]*10+start_pos[1]).to_bytes(1, "big"))

@@ -1,32 +1,27 @@
 
 from cuschess import *
-from stockfish import Stockfish
-from platform import system
-
-platform_ = system()
-
-if platform_ == "Linux":
-    ENGINE_PATH = "cuschess/computer/stockfish/stockfish_14.1_linux_x64"
-elif platform_ == "Windows":
-    ENGINE_PATH = "cuschess/computer/stockfish/stockfish_14.1_win_x64.exe"
 
 
-class ChessGame:
-    def __init__(self, screen):
-        global ENGINE_PATH
+class ComputerChessGame:
+    def __init__(self, screen, engine, playerc):
+        self.engine = engine
+        self.engine.set_fen_position(
+            "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
         self.board = Board()
         self.players = [Black(self.board), White(self.board)]
-        self.graphicalboard = BoardGraphical(
-            self.board, self.players, screen, reverse=False)
         self.black, self.white = self.players
-        self.player = self.white
-        self.computer = self.black
-        self.turn = self.player
+        self.player = self.players[playerc]
+        self.computer = self.players[(not playerc)]
+        self.turn = self.white
+        self.graphicalboard = BoardGraphical(
+            self.board, self.players, screen, reverse=(not self.player.real))
         self.checkers = list()
-        self.engine = Stockfish(path=ENGINE_PATH)
 
     def handle_graphics(self):
         self.graphicalboard.draw_all(self.checkers)
+
+    def change_difficulty(self, level):
+        self.engine.set_skill_level(level)
 
     def reset_skipped(self, color):
         for line in self.board.internal:
