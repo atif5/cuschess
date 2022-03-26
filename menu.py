@@ -1,6 +1,5 @@
 
-import pygame
-import time
+from .graphical import WHITE, BLACK, pygame
 
 pygame.font.init()
 
@@ -8,8 +7,6 @@ FONT_NAME = "dejavuserif"
 FONT_SIZE = 30
 FONT = pygame.font.SysFont(FONT_NAME, FONT_SIZE)
 
-WHITE = "#FFFFFF"
-BLACK = "#000000"
 VIOLET = "#946C94"
 
 
