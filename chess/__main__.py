@@ -19,7 +19,7 @@ def main(screen):
         maint = f"CusSsss, {winner}"
 
     widgets = [
-        InformingText((0, 40), maint, 20, LIGHTPINK, midst=True, leng=360),
+        InformingText((0, 40), maint, 20, "rainbow", midst=True, leng=360),
         InformingText((0, 120), "Play again?", 30,
                       LIGHTPINK, midst=True, leng=360),
         Option((86, 200), "Yes", 30, LIGHTPINK,

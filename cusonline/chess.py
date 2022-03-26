@@ -4,7 +4,7 @@ import time
 import socket
 import select
 
-SERVICE_ADDR = ("fxxf.me", 8002)
+SERVICE_ADDR = ("0.0.0.0", 8002)
 
 class OnlineChessGame:
     def __init__(self, screen):

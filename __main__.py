@@ -16,7 +16,7 @@ screen = pygame.display.set_mode((360, 360))
 def main():
     global screen
     widgets = [
-        InformingText((0, 20), "CusChess", 40, PINK,
+        InformingText((0, 20), "CusChess", 40, "rainbow",
                       midst=True, leng=360),
         Option((116, 80), "2 Player", 30, LIGHTPINK,
                {twoplayer.main: [screen]}, midst=True, leng=360),

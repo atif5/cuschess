@@ -8,6 +8,16 @@ FONT_SIZE = 30
 FONT = pygame.font.SysFont(FONT_NAME, FONT_SIZE)
 
 VIOLET = "#946C94"
+RAINBOW = list()
+
+crange = [0, 255, 0]
+
+for i in range(12):
+    addition = (1-2*(i % 2 == 0).real)*3
+    i %= 3
+    for _ in range(85):
+        crange[i] -= addition
+        RAINBOW.append(tuple(crange))
 
 
 class Option:
@@ -66,7 +76,7 @@ class Option:
     def on_unfocus(self):
         self.reset()
 
-    def exist(self, screen, focus_color=(255, 255, 255)):
+    def exist(self, screen, focus_color=WHITE):
         self.draw(screen)
         if self.is_clicked():
             return self.on_click()
@@ -88,12 +98,34 @@ class InformingText:
         self.size = size
         self.font = pygame.font.SysFont(FONT_NAME, self.size)
         self.color = color
-        self.surface = self.font.render(self.text, True, self.color)
+        if self.color == "rainbow":
+            self.surface = self.font.render(self.text, True, WHITE)
+        else:
+            self.surface = self.font.render(self.text, True, self.color)
         self.ssize = self.surface.get_size()
         if midst:
             self.midst(leng)
+        if self.color == "rainbow":
+            self.color_turn = 0
+
+    def update(self, pos, color):
+        self.pos = pos
+        if self.color == "rainbow":
+            self.surface = self.font.render(self.text, True, color)
+            return
+        self.color = color
+        self.surface = self.font.render(self.text, True, self.color)
 
     def exist(self, screen):
+        if self.color != "rainbow":
+            screen.blit(self.surface, self.pos)
+        else:
+            self.rexist(screen)
+
+    def rexist(self, screen):
+        color = RAINBOW[self.color_turn]
+        self.update(self.pos, color)
+        self.color_turn = (self.color_turn+1) % 1020
         screen.blit(self.surface, self.pos)
 
     def midst(self, leng):
@@ -109,7 +141,7 @@ class Menu:
             widget for widget in self.widgets if type(widget) is Option]
         self.texts = [
             widget for widget in self.widgets if type(widget) is InformingText]
-    
+
     def waitfor_unpress(self):
         while pygame.mouse.get_pressed()[0]:
             pygame.event.pump()
