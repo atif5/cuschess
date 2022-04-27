@@ -1,5 +1,5 @@
 # cuschess
-a chess game written by a dumbass
+a chess game written by a dumbass. Here is a [footage](https://gfycat.com/lonelylegalinchworm) of me playing around with it
 
 ### How to install and play
 
@@ -17,7 +17,7 @@ after you are done simply execute:
 `python3 -m cuschess`
 
 #### For windows
-again clone this repo (git cmd recommended):
+again, clone this repo (git cmd recommended):
 
 `git clone https://github.com/atif5/cuschess`
 
