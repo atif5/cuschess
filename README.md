@@ -32,4 +32,5 @@ then:
 ### Notes
 
 - This project is still under progress and the online option is not functional, you can easily alter the code and play on LAN though.
+- There is NO sound.
 - Cus is just a stupid word in turkish that I make fun of. Decided to name my project after it for shits and giggles :D 
